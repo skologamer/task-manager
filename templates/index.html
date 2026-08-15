@@ -46,6 +46,12 @@
       </form>
 
       <h2>Tasks</h2>
+      <div class="task-toolbar">
+        <button type="button" class="task-filter active" data-filter="all">All</button>
+        <button type="button" class="task-filter" data-filter="open">Open</button>
+        <button type="button" class="task-filter" data-filter="completed">Completed</button>
+        <button type="button" class="task-filter" data-filter="due-soon">Due soon</button>
+      </div>
       <ul id="task-list"></ul>
 
       <h3>Import Calendar (.ics)</h3>
@@ -90,3 +96,4 @@
   </div>
 </body>
 </html>
+

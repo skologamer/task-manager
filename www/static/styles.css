@@ -25,3 +25,8 @@ button { padding: 8px 12px; }
 
 .form-error { color: #b33; padding:6px; background: #fff0f0; border:1px solid #f2caca; border-radius:4px; margin-top:8px }
 .form-success { color: #216c3b; padding:6px; background: #edf9f0; border:1px solid #c9e9d0; border-radius:4px; margin-top:8px }
+
+#task-list .empty-state { color: #666; font-style: italic; padding: 12px 4px; }
+.task-toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 12px; }
+.task-filter { padding: 6px 10px; border: 1px solid #d0d7de; border-radius: 999px; background: #fff; cursor: pointer; font-size: 14px; }
+.task-filter.active { background: #1976d2; color: #fff; border-color: #1976d2; }

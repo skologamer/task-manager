@@ -39,6 +39,25 @@ function scheduleNotification(task){
   }, delay);
 }
 
+function getVisibleTasks(tasks){
+  const filter = window.taskFilter || 'all';
+  const ordered = [...tasks].sort((a, b) => {
+    const aTime = a.due_date ? new Date(a.due_date).getTime() : Number.MAX_SAFE_INTEGER;
+    const bTime = b.due_date ? new Date(b.due_date).getTime() : Number.MAX_SAFE_INTEGER;
+    return aTime - bTime;
+  });
+
+  switch (filter) {
+    case 'open':
+      return ordered.filter(t => !t.completed);
+    case 'completed':
+      return ordered.filter(t => t.completed);
+    case 'due-soon':
+      return ordered.filter(t => !t.completed && t.due_date && new Date(t.due_date) - new Date() <= 86400000);
+    default:
+      return ordered;
+  }
+}
 function renderTasks(tasks){
   const ul = document.getElementById('task-list');
   ul.innerHTML='';
@@ -55,6 +74,10 @@ function renderTasks(tasks){
 
     const titleSpan = document.createElement('span');
     titleSpan.textContent = ' ' + t.title + (t.due_date? ' — '+isoLocalString(t.due_date): '');
+    if (t.completed) {
+      titleSpan.style.textDecoration = 'line-through';
+      titleSpan.style.opacity = '0.7';
+    }
 
     const del = document.createElement('button');
     del.textContent = 'Delete';
@@ -130,6 +153,17 @@ async function refreshAll(calendar, chart){
 }
 
 document.addEventListener('DOMContentLoaded', async ()=>{
+  window.taskFilter = 'all';
+
+  const filterButtons = document.querySelectorAll('.task-filter');
+  filterButtons.forEach((button) => {
+    button.addEventListener('click', async () => {
+      window.taskFilter = button.dataset.filter || 'all';
+      filterButtons.forEach((el) => el.classList.toggle('active', el === button));
+      const tasks = await fetchTasks();
+      renderTasks(tasks);
+    });
+  });
   const calendarEl = document.getElementById('calendar');
   const calendar = new FullCalendar.Calendar(calendarEl, { initialView:'dayGridMonth' });
   calendar.render();
@@ -211,3 +245,6 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     }
   });
 });
+
+
+
