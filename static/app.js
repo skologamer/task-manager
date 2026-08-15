@@ -156,22 +156,40 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
   document.getElementById('task-form').addEventListener('submit', async (e)=>{
     e.preventDefault();
+    const taskError = document.getElementById('taskError');
     const title = document.getElementById('title').value.trim();
     const description = document.getElementById('description').value.trim();
     const due = document.getElementById('due').value;
     const remind = parseInt(document.getElementById('remind').value || '15', 10);
     const notify = document.getElementById('notify').checked;
-    await fetch(API_BASE_URL + '/tasks', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ title, description, due_date: due || null, remind_before: remind, notify }) });
-    document.getElementById('task-form').reset();
-    await refreshAll(calendar, chart);
+    taskError.textContent = '';
+    if(!title){ taskError.textContent = 'Task title required'; return; }
+    if(isNaN(remind) || remind < 0){ taskError.textContent = 'Reminder must be a non-negative number'; return; }
+    try {
+      const res = await fetch(API_BASE_URL + '/tasks', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ title, description, due_date: due || null, remind_before: remind, notify }) });
+      const data = await res.json().catch(()=>({}));
+      if(!res.ok){ throw new Error(data.error || 'Could not create task'); }
+      document.getElementById('task-form').reset();
+      await refreshAll(calendar, chart);
+    } catch (err) {
+      taskError.textContent = err.message || 'Unable to create task';
+    }
   });
 
   document.getElementById('ics-file').addEventListener('change', async (e)=>{
     const f = e.target.files[0];
+    const importError = document.getElementById('importError');
+    importError.textContent = '';
     if(!f) return;
     const fd = new FormData();
     fd.append('ics', f);
-    await fetch(API_BASE_URL + '/import_ics', { method:'POST', body: fd });
-    await refreshAll(calendar, chart);
+    try {
+      const res = await fetch(API_BASE_URL + '/import_ics', { method:'POST', body: fd });
+      const data = await res.json().catch(()=>({}));
+      if(!res.ok){ throw new Error(data.error || 'Unable to import calendar'); }
+      await refreshAll(calendar, chart);
+    } catch (err) {
+      importError.textContent = err.message || 'Unable to import calendar';
+    }
   });
 });
