@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Account</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="messages">
+        {% for category, msg in messages %}
+          <div class="message {{ category }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  <h2>Account</h2>
+  <p>Username: {{ current_user.username }}</p>
+  <p>API Token: <code>{{ current_user.api_token or 'No token yet' }}</code></p>
+
+  <h3>Change password</h3>
+  <form method="post" action="/account">
+    <label>Current password<input name="old_password" type="password" required /></label>
+    <label>New password<input name="new_password" type="password" required /></label>
+    <button type="submit">Change password</button>
+  </form>
+  <div id="accountError" class="form-error" aria-live="polite"></div>
+
+  <h3>Regenerate API token</h3>
+  <form method="post" action="/account/regenerate">
+    <button type="submit">Regenerate token</button>
+  </form>
+
+  <p><a href="/">Back</a></p>
+  <script>
+    document.querySelector('form[action="/account"]').addEventListener('submit', function(e){
+      const oldp = this.old_password.value || '';
+      const newp = this.new_password.value || '';
+      const err = document.getElementById('accountError');
+      err.textContent = '';
+      if(!oldp){ err.textContent = 'Current password required'; e.preventDefault(); this.old_password.focus(); return; }
+      if(newp.length < 8){ err.textContent = 'New password must be at least 8 characters'; e.preventDefault(); this.new_password.focus(); return; }
+      if(oldp === newp){ err.textContent = 'New password must be different'; e.preventDefault(); this.new_password.focus(); return; }
+    });
+  </script>
+</body>
+</html>

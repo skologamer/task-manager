@@ -1,0 +1,26 @@
+body { font-family: Arial, sans-serif; margin: 20px; }
+.container { display: flex; gap: 20px; }
+.left { width: 360px; }
+.right { flex: 1; }
+.auth-bar { margin-bottom: 8px }
+.auth-bar a { margin-right: 8px }
+#calendar { max-width: 900px; margin-bottom: 20px; }
+#task-list { list-style: none; padding: 0; }
+#task-list li { padding: 8px; border-bottom: 1px solid #eee; }
+form input, form textarea { width: 100%; margin-bottom: 8px; padding: 6px; }
+button { padding: 8px 12px; }
+
+/* Modal styles */
+.modal { position: fixed; left: 0; top: 0; right:0; bottom:0; background: rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; z-index:1000 }
+.modal-content { background: #fff; padding:16px; border-radius:6px; width:320px; box-shadow:0 6px 18px rgba(0,0,0,0.2) }
+.modal-content label { display:block; margin-bottom:8px; font-size:14px }
+.modal-content input[type="text"], .modal-content input[type="datetime-local"], .modal-content input[type="number"], .modal-content textarea { width:100%; box-sizing:border-box; padding:6px; margin-top:4px }
+.modal-content textarea { min-height:80px }
+
+.messages { margin: 8px 0 }
+.message { padding: 8px; border-radius:4px; margin-bottom:6px }
+.message.success { background:#e6ffed; border:1px solid #b3f0c3 }
+.message.error { background:#ffe6e6; border:1px solid #f0b3b3 }
+.message.info { background:#e6f0ff; border:1px solid #b3c9ff }
+
+.form-error { color: #b33; padding:6px; background: #fff0f0; border:1px solid #f2caca; border-radius:4px; margin-top:8px }

@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Task Manager</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/config.js"></script>
+  <script src="/static/push_client.js"></script>
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#1976d2">
+  <link rel="apple-touch-icon" href="/static/icons/icon-192.svg">
+</head>
+<body>
+  <div class="auth-bar">
+    {% if current_user.is_authenticated %}
+      Hello {{ current_user.username }} | <a href="/account">Account</a> | <a href="/logout">Logout</a>
+    {% else %}
+      <a href="/login">Login</a> | <a href="/register">Register</a>
+    {% endif %}
+  </div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="messages">
+        {% for category, msg in messages %}
+          <div class="message {{ category }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  <div class="container">
+    <h1>Task Manager</h1>
+    <div class="left">
+      <form id="task-form">
+        <input id="title" placeholder="Task title" required />
+        <textarea id="description" placeholder="Description (optional)"></textarea>
+        <input id="due" type="datetime-local" />
+        <label>Remind (minutes before): <input id="remind" type="number" value="15" min="0" /></label>
+        <label>Notifications: <input id="notify" type="checkbox" checked /></label>
+        <button type="submit">Add Task</button>
+      </form>
+
+      <h2>Tasks</h2>
+      <ul id="task-list"></ul>
+
+      <h3>Import Calendar (.ics)</h3>
+      <input id="ics-file" type="file" accept=".ics" />
+    </div>
+
+    <div class="right">
+      <div id="calendar"></div>
+      <canvas id="progressChart" width="400" height="200"></canvas>
+    </div>
+  </div>
+  <script src="/static/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/static/sw.js').catch(function(err){
+        console.warn('ServiceWorker registration failed:', err);
+      });
+    }
+    // Prompt for notifications permission proactively
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  </script>
+
+  <!-- Edit Task Modal -->
+  <div id="editModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h3>Edit Task</h3>
+      <label>Title<input id="editTitle" type="text" /></label>
+      <label>Description<textarea id="editDescription"></textarea></label>
+      <label>Due<input id="editDue" type="datetime-local" /></label>
+      <label>Remind (minutes before)<input id="editRemind" type="number" min="0" /></label>
+      <label>Notifications <input id="editNotify" type="checkbox" /></label>
+        <div id="editError" class="form-error" aria-live="polite"></div>
+      <div style="margin-top:8px; text-align:right">
+        <button id="editCancel">Cancel</button>
+        <button id="editSave">Save</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

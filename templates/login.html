@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Login</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="messages">
+        {% for category, msg in messages %}
+          <div class="message {{ category }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  <h2>Login</h2>
+  <form method="post" action="/login">
+    <label>Username<input name="username" type="text" required /></label>
+    <label>Password<input name="password" type="password" required /></label>
+    <button type="submit">Login</button>
+  </form>
+  <div id="loginError" class="form-error" aria-live="polite"></div>
+  <p><a href="/register">Register</a></p>
+  <script>
+    document.querySelector('form').addEventListener('submit', function(e){
+      const user = this.username.value.trim();
+      const pass = this.password.value || '';
+      const err = document.getElementById('loginError');
+      err.textContent = '';
+      if(!user){ err.textContent = 'Username required'; e.preventDefault(); this.username.focus(); return; }
+      if(!pass){ err.textContent = 'Password required'; e.preventDefault(); this.password.focus(); return; }
+    });
+  </script>
+</body>
+</html>

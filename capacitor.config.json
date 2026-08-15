@@ -1,0 +1,6 @@
+{
+  "appId": "com.example.taskmanager",
+  "appName": "Task Manager",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
