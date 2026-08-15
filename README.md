@@ -5,7 +5,9 @@ A minimal Flask-based task management app with calendar import, a progress track
 [![CI](https://github.com/skologamer/task-maanger/actions/workflows/pytest.yml/badge.svg)](https://github.com/skologamer/task-maanger/actions/workflows/pytest.yml)
 
 [![Codecov](https://codecov.io/gh/skologamer/task-maanger/branch/main/graph/badge.svg)](https://codecov.io/gh/skologamer/task-maanger)
+## Overview
 
+Task Manager helps users keep daily responsibilities organized with a calendar view, quick task creation, reminder settings, and a simple progress dashboard.
 ## Features
 
 - Task CRUD with due dates and reminder settings
