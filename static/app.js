@@ -61,7 +61,17 @@ function getVisibleTasks(tasks){
 function renderTasks(tasks){
   const ul = document.getElementById('task-list');
   ul.innerHTML='';
-  tasks.forEach(t=>{
+  const visible = getVisibleTasks(tasks);
+  
+  if (!visible.length) {
+    const empty = document.createElement('li');
+    empty.className = 'empty-state';
+    empty.textContent = 'No tasks in this view yet.';
+    ul.appendChild(empty);
+    return;
+  }
+  
+  visible.forEach(t=>{
     const li = document.createElement('li');
 
     const checkbox = document.createElement('input');
